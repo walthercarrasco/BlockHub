@@ -179,22 +179,22 @@ contract BlockhubPOAP is ERC1155, Ownable {
     }
 
     function safeTransferFrom(
-        address from,
-        address to,
-        uint256 id,
-        uint256 amount,
-        bytes memory data
-    ) public override {
+        address,
+        address,
+        uint256,
+        uint256,
+        bytes memory
+    ) public pure override {
         revert("Badges are non-transferable");
     }
 
     function safeBatchTransferFrom(
-        address from,
-        address to,
-        uint256[] memory ids,
-        uint256[] memory amounts,
-        bytes memory data
-    ) public override {
+        address,
+        address,
+        uint256[] memory,
+        uint256[] memory,
+        bytes memory
+    ) public pure override {
         revert("Badges are non-transferable");
     }
 
