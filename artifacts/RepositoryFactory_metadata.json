@@ -189,31 +189,6 @@
 				"inputs": [
 					{
 						"indexed": true,
-						"internalType": "uint256",
-						"name": "tokenId",
-						"type": "uint256"
-					},
-					{
-						"indexed": true,
-						"internalType": "address",
-						"name": "owner",
-						"type": "address"
-					},
-					{
-						"indexed": false,
-						"internalType": "string",
-						"name": "repoCID",
-						"type": "string"
-					}
-				],
-				"name": "CreatedSuccessfully",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": true,
 						"internalType": "address",
 						"name": "from",
 						"type": "address"
@@ -250,6 +225,81 @@
 						"type": "address"
 					},
 					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "repoCID",
+						"type": "string"
+					}
+				],
+				"name": "approvedCommit",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "tokenId",
+						"type": "uint256"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "repoCID",
+						"type": "string"
+					}
+				],
+				"name": "createdSuccessfully",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "tokenId",
+						"type": "uint256"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "depositedETH",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "tokenId",
+						"type": "uint256"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					},
+					{
 						"indexed": true,
 						"internalType": "address",
 						"name": "committer",
@@ -266,6 +316,31 @@
 				"type": "event"
 			},
 			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "committer",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "rejectedBy",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "repoCID",
+						"type": "string"
+					}
+				],
+				"name": "rejectedCommit",
+				"type": "event"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -279,6 +354,29 @@
 					}
 				],
 				"name": "approve",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_tokenId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "commitIndex",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "reward",
+						"type": "uint256"
+					}
+				],
+				"name": "approveCommit",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -321,8 +419,21 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_tokenId",
+						"type": "uint256"
+					}
+				],
+				"name": "depositToRepo",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
 				"inputs": [],
-				"name": "getAllCIDsByOwner",
+				"name": "getAllReposByOwner",
 				"outputs": [
 					{
 						"internalType": "string[]",
@@ -424,9 +535,32 @@
 						"internalType": "string",
 						"name": "message",
 						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "commitCID",
+						"type": "string"
 					}
 				],
-				"name": "processCommit",
+				"name": "processNewCommit",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_tokenId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "commitIndex",
+						"type": "uint256"
+					}
+				],
+				"name": "rejectCommit",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -455,6 +589,11 @@
 						"internalType": "address[]",
 						"name": "committers",
 						"type": "address[]"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "status",
+						"type": "uint256[]"
 					}
 				],
 				"stateMutability": "view",
@@ -963,19 +1102,19 @@
 			]
 		},
 		"contracts/Repository.sol": {
-			"keccak256": "0xf3328341b38c352e347fe675b22fdc3358d339e3550fe97d74e2f36d73ea0540",
+			"keccak256": "0x305b4633817f1e45c057e6386efe08065c1a00cd0a870a285502d5d7197323ce",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://54bc69ddf6bfabb416a0bdc94cbfcae6478043e8906646e3b36f27cd6bde03ca",
-				"dweb:/ipfs/QmNoVxKTCJDHsk3hHMGt4QQqyAtwT8QPjBkeWoeVL4eFwv"
+				"bzz-raw://2f55fc9095e3a6f62a8d1a25bd1d38b51a1ca187c48b471bc261e6bdd2375d21",
+				"dweb:/ipfs/QmXfiCJYykPChgizhU7cK59r1UDwicbbJ69xu2C85NnE7a"
 			]
 		},
 		"contracts/RepositoryFactory.sol": {
-			"keccak256": "0x04fc8d442146fc6e331a2c07460a34b46c28fac89b976ca9d49bcb43b713b5f0",
+			"keccak256": "0x969cfc484e383846036fb09434a467a7bc36e453c5d4ba49dc5ad7d8b1249176",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://0343abe492531da74648c09cac94d60b07563fe00c2ec9f683d07e5163ee5a95",
-				"dweb:/ipfs/QmYLZApLoN5WiVdKRn7aY72Fm4L5ZsavRND8wBqy7pBAAm"
+				"bzz-raw://73a60fbd93f403e101abb61f8960b535df0e1ed2edf73de024aa8c121244912f",
+				"dweb:/ipfs/QmZhSrRgPN5CLG4gWA4oD9NmEbAeodX88qy7uiA3KQyjxz"
 			]
 		}
 	},

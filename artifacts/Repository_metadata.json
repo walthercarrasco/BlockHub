@@ -183,37 +183,6 @@
 				"anonymous": false,
 				"inputs": [
 					{
-						"indexed": false,
-						"internalType": "string",
-						"name": "changeHash",
-						"type": "string"
-					},
-					{
-						"indexed": false,
-						"internalType": "address",
-						"name": "contributor",
-						"type": "address"
-					},
-					{
-						"indexed": false,
-						"internalType": "address",
-						"name": "approvedBy",
-						"type": "address"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "rewardAmount",
-						"type": "uint256"
-					}
-				],
-				"name": "ChangeApproved",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
 						"indexed": true,
 						"internalType": "address",
 						"name": "from",
@@ -238,6 +207,24 @@
 			{
 				"inputs": [
 					{
+						"internalType": "uint256",
+						"name": "_commitIndex",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "rewardAmount",
+						"type": "uint256"
+					}
+				],
+				"name": "acceptCommit",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "string",
 						"name": "_commitMsg",
 						"type": "string"
@@ -246,9 +233,14 @@
 						"internalType": "address",
 						"name": "_committer",
 						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "_commitCID",
+						"type": "string"
 					}
 				],
-				"name": "addCommit",
+				"name": "addPendingCommit",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -274,24 +266,6 @@
 			{
 				"inputs": [
 					{
-						"internalType": "string",
-						"name": "changeHash",
-						"type": "string"
-					},
-					{
-						"internalType": "uint256",
-						"name": "rewardAmount",
-						"type": "uint256"
-					}
-				],
-				"name": "approveChange",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
 						"internalType": "address",
 						"name": "owner",
 						"type": "address"
@@ -310,25 +284,9 @@
 			},
 			{
 				"inputs": [],
-				"name": "getAllCommits",
-				"outputs": [
-					{
-						"internalType": "string[]",
-						"name": "messages",
-						"type": "string[]"
-					},
-					{
-						"internalType": "uint256[]",
-						"name": "timestamps",
-						"type": "uint256[]"
-					},
-					{
-						"internalType": "address[]",
-						"name": "committers",
-						"type": "address[]"
-					}
-				],
-				"stateMutability": "view",
+				"name": "deposit",
+				"outputs": [],
+				"stateMutability": "payable",
 				"type": "function"
 			},
 			{
@@ -345,6 +303,47 @@
 						"internalType": "address",
 						"name": "",
 						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getBalance",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getCommits",
+				"outputs": [
+					{
+						"internalType": "string[]",
+						"name": "messages",
+						"type": "string[]"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "timestamps",
+						"type": "uint256[]"
+					},
+					{
+						"internalType": "address[]",
+						"name": "committers",
+						"type": "address[]"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "status",
+						"type": "uint256[]"
 					}
 				],
 				"stateMutability": "view",
@@ -430,6 +429,25 @@
 					}
 				],
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_commitIndex",
+						"type": "uint256"
+					}
+				],
+				"name": "rejectCommit",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -574,6 +592,10 @@
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
+			},
+			{
+				"stateMutability": "payable",
+				"type": "receive"
 			}
 		],
 		"devdoc": {
@@ -844,11 +866,11 @@
 			]
 		},
 		"contracts/Repository.sol": {
-			"keccak256": "0xd314629851f322dfd04d54ef41a74a59410169f6392a7225db22d37f30f8dae8",
+			"keccak256": "0x305b4633817f1e45c057e6386efe08065c1a00cd0a870a285502d5d7197323ce",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://b7b35092fd34870acbb9281bd89891ce8eddde34ec5664a720478555b2ac06be",
-				"dweb:/ipfs/QmcK6zsWFhyJimFdDz68svXca5TcXi3Q4txPEeYEQ3tPGb"
+				"bzz-raw://2f55fc9095e3a6f62a8d1a25bd1d38b51a1ca187c48b471bc261e6bdd2375d21",
+				"dweb:/ipfs/QmXfiCJYykPChgizhU7cK59r1UDwicbbJ69xu2C85NnE7a"
 			]
 		}
 	},

@@ -11,15 +11,28 @@ contract RepositoryFactory is ERC721Enumerable {
 
     mapping (uint256 => Repository) private repositories;
 
+    // Create Repository
     function createRepository(string memory _repoName, string memory _repoCID) public {
         uint256 tokenId = totalSupply() + 1; // token IDs start at 1
         _safeMint(msg.sender, tokenId);
 
         repositories[tokenId] = new Repository(_repoName, _repoCID, msg.sender);
-        emit CreatedSuccessfully(tokenId, msg.sender, _repoCID);
+        emit createdSuccessfully(tokenId, msg.sender, _repoCID);
     }
 
-    function getAllCIDsByOwner() external view returns (string[] memory folderCIDs, uint256[] memory tokens) {
+    //Deposit ETH into repository
+    function depositToRepo(uint256 _tokenId) external payable {
+        Repository repo = repositories[_tokenId];
+        require(msg.value > 0, "Must send ETH");
+
+        // Forward ETH to the repository contract
+        (bool success, ) = address(repo).call{value: msg.value}("");
+        require(success, "ETH deposit failed");
+        emit depositedETH(_tokenId, msg.sender, msg.value);
+    }
+    
+    //Get all repositories of Owner
+    function getAllReposByOwner() external view returns (string[] memory folderCIDs, uint256[] memory tokens) {
         uint256 count = balanceOf(msg.sender); // number of NFTs owned
         folderCIDs = new string[](count);
         tokens = new uint256[](count);
@@ -30,23 +43,50 @@ contract RepositoryFactory is ERC721Enumerable {
         }
     }
 
-    function processCommit(uint256 _tokenId, string memory message) public {
+    //Add to list of pending commits
+    function processNewCommit(
+        uint256 _tokenId, 
+        string memory message, 
+        string memory commitCID) public 
+    {
         Repository repo = repositories[_tokenId];
-        
-        // Add commit to repository
-        repo.addCommit(message, msg.sender);
-
-
-        // Emit event
+        repo.addPendingCommit(message, msg.sender, commitCID);
         emit processedCommit(_tokenId, repo.getRepoOwner(), msg.sender, repo.getRepoFolderCID());
     }
-
-    function retrieveCommits(uint256 _tokenId) public view returns(string[] memory messages, uint256[] memory timestamps, address[] memory committers){
+    
+    //Approve pending commit
+    function approveCommit(
+        uint256 _tokenId, 
+        uint256 commitIndex,
+        uint256 reward) public 
+    {
         Repository repo = repositories[_tokenId];
-        return repo.getAllCommits();
+        repo.acceptCommit(commitIndex, reward);
+        emit approvedCommit(_tokenId, repo.getRepoOwner(), repo.getRepoFolderCID());
     }
 
-    event CreatedSuccessfully(
+    //Reject pending commit
+    function rejectCommit(
+        uint256 _tokenId,
+        uint256 commitIndex) public
+    {
+        Repository repo = repositories[_tokenId];
+        address commiter = repo.rejectCommit(commitIndex);
+        emit rejectedCommit(commiter, repo.getRepoOwner(), repo.getRepoFolderCID());
+    }
+
+    //Get all repository commits (use for history)
+    function retrieveCommits(uint256 _tokenId) public view returns(
+        string[] memory messages, 
+        uint256[] memory timestamps, 
+        address[] memory committers, 
+        uint256[] memory status)
+    {
+        Repository repo = repositories[_tokenId];
+        return repo.getCommits();
+    }
+
+    event createdSuccessfully(
         uint256 indexed tokenId,       // ID of the NFT minted
         address indexed owner,        // Name of the repository
         string repoCID               // IPFS folder CID
@@ -57,5 +97,23 @@ contract RepositoryFactory is ERC721Enumerable {
         address indexed owner,        // Name of the repository
         address indexed committer,    // Address of the committer
         string repoCID               // IPFS folder CID
+    );
+
+    event approvedCommit(
+        uint256 indexed tokenId,       // ID of the NFT minted
+        address indexed owner,        // Name of the repository
+        string repoCID  
+    );
+
+    event rejectedCommit(
+        address indexed committer,
+        address indexed rejectedBy,
+        string repoCID
+    );
+
+    event depositedETH(
+        uint256 indexed tokenId,       // ID of the NFT minted
+        address indexed owner,        // Name of the repository
+        uint256 amount
     );
 }
