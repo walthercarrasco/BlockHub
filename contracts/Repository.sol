@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.28;
+pragma solidity >=0.7.0 <0.9.0;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -8,7 +8,7 @@ contract Repository is ERC721{
     struct Commit{
         string commitMsg;
         uint256 timestamp;
-        address committer;
+        address payable committer;
         string commitCID;
         uint256 status;
     }
@@ -21,34 +21,28 @@ contract Repository is ERC721{
         repoName = _repoName;
         repoFolderCID = _repoCID;
         repoOwnerAddr = _creator;
-        _safeMint(_creator, 1); 
     }
 
     receive() external payable {}
 
-    function getRepoFolderCID() external view returns (string memory) {
-        return repoFolderCID;
+    function getBalance() external view returns (uint256) {
+        return address(this).balance;
     }
 
-    function getRepoName() external view returns (string memory) {
-        return repoName;
-    }
-
+   //Modificador para indicar que solo el dueno puede ejecutar
     modifier onlyRepoOwner(address sender) {
         require(sender == repoOwnerAddr, "No eres el dueno del repositorio");
         _;
     }
 
+    // Get Folder CID
+    function getRepoFolderCID() external view returns (string memory) {
+        return repoFolderCID;
+    } 
 
-    function addPendingCommit(string memory _commitMsg, address _committer, string memory _commitCID) external {
-        Commit memory newCommit = Commit({
-            commitMsg: _commitMsg,
-            timestamp: block.timestamp, 
-            committer: _committer,
-            commitCID: _commitCID,
-            status: 0
-        });
-        _commits.push(newCommit);
+    // Get owner
+    function getRepoOwner() external view returns (address) {
+        return repoOwnerAddr;
     }
 
     function getCommits() external view returns (
@@ -72,6 +66,19 @@ contract Repository is ERC721{
         }
     } 
 
+    // Add a new pending commit
+    function addPendingCommit(string memory _commitMsg, address payable _committer, string memory _commitCID) external {
+        Commit memory newCommit = Commit({
+            commitMsg: _commitMsg,
+            timestamp: block.timestamp,  // current block timestamp
+            committer: _committer,
+            commitCID: _commitCID,
+            status: 0
+        });
+        _commits.push(newCommit);
+    }
+
+    //Accept pending commit
     function acceptCommit(uint256 _commitIndex, uint256 rewardAmount, address sender) external payable onlyRepoOwner(sender){
         Commit storage c = _commits[_commitIndex];
         require(c.status == 0, "Commit already processed");
@@ -86,18 +93,15 @@ contract Repository is ERC721{
         require(success, "Payment failed");
     }
 
+    // Reject a commit without paying
     function rejectCommit(uint256 _commitIndex, address sender) external onlyRepoOwner(sender) returns (address){
         Commit storage c = _commits[_commitIndex];
         require(c.status == 0, "Commit already processed");
         c.status = 2;
         return c.committer;
     }
-
-    function getBalance() external view returns (uint256) {
-        return address(this).balance;
-    }
-
-    function getRepoOwner() external view returns (address) {
-        return repoOwnerAddr;
+    
+    function getRepoName() external view returns (string memory) {
+        return repoName;
     }
 }
