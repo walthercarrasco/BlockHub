@@ -215,11 +215,16 @@
 						"internalType": "uint256",
 						"name": "rewardAmount",
 						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "sender",
+						"type": "address"
 					}
 				],
 				"name": "acceptCommit",
 				"outputs": [],
-				"stateMutability": "nonpayable",
+				"stateMutability": "payable",
 				"type": "function"
 			},
 			{
@@ -230,7 +235,7 @@
 						"type": "string"
 					},
 					{
-						"internalType": "address",
+						"internalType": "address payable",
 						"name": "_committer",
 						"type": "address"
 					},
@@ -437,6 +442,11 @@
 						"internalType": "uint256",
 						"name": "_commitIndex",
 						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "sender",
+						"type": "address"
 					}
 				],
 				"name": "rejectCommit",
@@ -866,11 +876,11 @@
 			]
 		},
 		"contracts/Repository.sol": {
-			"keccak256": "0x305b4633817f1e45c057e6386efe08065c1a00cd0a870a285502d5d7197323ce",
+			"keccak256": "0xe07bd70f17550e3eefcc483ad2a2cb574faa40872088872f301208a8a6884418",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://2f55fc9095e3a6f62a8d1a25bd1d38b51a1ca187c48b471bc261e6bdd2375d21",
-				"dweb:/ipfs/QmXfiCJYykPChgizhU7cK59r1UDwicbbJ69xu2C85NnE7a"
+				"bzz-raw://d5398fae65883c100e119a6e4fd57fefcce89f4a331c1dc483b38736c0b74560",
+				"dweb:/ipfs/QmWGT3PsoeaSzK6z6MZsSqWbsoN4uQnoJisufJoVtSBttK"
 			]
 		}
 	},

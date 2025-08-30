@@ -8,7 +8,7 @@ contract Repository is ERC721{
     struct Commit{
         string commitMsg;
         uint256 timestamp;
-        address committer;
+        address payable committer;
         string commitCID;
         uint256 status;
     }
@@ -25,17 +25,13 @@ contract Repository is ERC721{
 
     receive() external payable {}
 
-    function deposit() external payable {
-        require(msg.value > 0, "Must send ETH");
-    }
-
     function getBalance() external view returns (uint256) {
         return address(this).balance;
     }
 
    //Modificador para indicar que solo el dueno puede ejecutar
-    modifier onlyRepoOwner() {
-        require(ownerOf(1) == msg.sender, "No eres el dueno del repositorio");
+    modifier onlyRepoOwner(address sender) {
+        require(sender == repoOwnerAddr, "No eres el dueno del repositorio");
         _;
     }
 
@@ -71,7 +67,7 @@ contract Repository is ERC721{
     } 
 
     // Add a new pending commit
-    function addPendingCommit(string memory _commitMsg, address _committer, string memory _commitCID) external {
+    function addPendingCommit(string memory _commitMsg, address payable _committer, string memory _commitCID) external {
         Commit memory newCommit = Commit({
             commitMsg: _commitMsg,
             timestamp: block.timestamp,  // current block timestamp
@@ -83,7 +79,7 @@ contract Repository is ERC721{
     }
 
     //Accept pending commit
-    function acceptCommit(uint256 _commitIndex, uint256 rewardAmount) external onlyRepoOwner{
+    function acceptCommit(uint256 _commitIndex, uint256 rewardAmount, address sender) external payable onlyRepoOwner(sender){
         Commit storage c = _commits[_commitIndex];
         require(c.status == 0, "Commit already processed");
         require(address(this).balance >= rewardAmount, "Not enough ETH in contract");
@@ -98,7 +94,7 @@ contract Repository is ERC721{
     }
 
     // Reject a commit without paying
-    function rejectCommit(uint256 _commitIndex) external onlyRepoOwner returns (address){
+    function rejectCommit(uint256 _commitIndex, address sender) external onlyRepoOwner(sender) returns (address){
         Commit storage c = _commits[_commitIndex];
         require(c.status == 0, "Commit already processed");
         c.status = 2;

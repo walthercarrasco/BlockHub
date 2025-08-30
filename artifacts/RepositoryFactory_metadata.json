@@ -378,7 +378,7 @@
 				],
 				"name": "approveCommit",
 				"outputs": [],
-				"stateMutability": "nonpayable",
+				"stateMutability": "payable",
 				"type": "function"
 			},
 			{
@@ -463,6 +463,25 @@
 						"internalType": "address",
 						"name": "",
 						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_tokenId",
+						"type": "uint256"
+					}
+				],
+				"name": "getBalance",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -1102,19 +1121,19 @@
 			]
 		},
 		"contracts/Repository.sol": {
-			"keccak256": "0x305b4633817f1e45c057e6386efe08065c1a00cd0a870a285502d5d7197323ce",
+			"keccak256": "0x885c54e321182cb0f471c1674bb75d0adc4d2efe788bf3fea5f54e85bebeaf8f",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://2f55fc9095e3a6f62a8d1a25bd1d38b51a1ca187c48b471bc261e6bdd2375d21",
-				"dweb:/ipfs/QmXfiCJYykPChgizhU7cK59r1UDwicbbJ69xu2C85NnE7a"
+				"bzz-raw://158423a7f3ff583874fa6c322ce67026e4162c5d2646d858f58e7c11ae7eb952",
+				"dweb:/ipfs/QmXX2WtNRWTMWw67RWpdhxvdnEZ5t2f2g6hbrwKgyKsrjQ"
 			]
 		},
 		"contracts/RepositoryFactory.sol": {
-			"keccak256": "0x969cfc484e383846036fb09434a467a7bc36e453c5d4ba49dc5ad7d8b1249176",
+			"keccak256": "0xf051f2ffdecc5a623d05fd9376a799f7910d1be8ad8da2c8b13643172f761693",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://73a60fbd93f403e101abb61f8960b535df0e1ed2edf73de024aa8c121244912f",
-				"dweb:/ipfs/QmZhSrRgPN5CLG4gWA4oD9NmEbAeodX88qy7uiA3KQyjxz"
+				"bzz-raw://e17649d288eee0df054d2c610c49c2346608171e41fa95e457b3aebfb6ccdf3d",
+				"dweb:/ipfs/QmSmotQrTzhamwyHsxuaSJweJvLQMQ8Tx5HEven3f5kTKV"
 			]
 		}
 	},

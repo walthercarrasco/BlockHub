@@ -50,7 +50,7 @@ contract RepositoryFactory is ERC721Enumerable {
         string memory commitCID) public 
     {
         Repository repo = repositories[_tokenId];
-        repo.addPendingCommit(message, msg.sender, commitCID);
+        repo.addPendingCommit(message, payable (msg.sender), commitCID);
         emit processedCommit(_tokenId, repo.getRepoOwner(), msg.sender, repo.getRepoFolderCID());
     }
     
@@ -58,10 +58,10 @@ contract RepositoryFactory is ERC721Enumerable {
     function approveCommit(
         uint256 _tokenId, 
         uint256 commitIndex,
-        uint256 reward) public 
+        uint256 reward) public payable
     {
         Repository repo = repositories[_tokenId];
-        repo.acceptCommit(commitIndex, reward);
+        repo.acceptCommit(commitIndex, reward, msg.sender);
         emit approvedCommit(_tokenId, repo.getRepoOwner(), repo.getRepoFolderCID());
     }
 
@@ -71,7 +71,7 @@ contract RepositoryFactory is ERC721Enumerable {
         uint256 commitIndex) public
     {
         Repository repo = repositories[_tokenId];
-        address commiter = repo.rejectCommit(commitIndex);
+        address commiter = repo.rejectCommit(commitIndex, msg.sender);
         emit rejectedCommit(commiter, repo.getRepoOwner(), repo.getRepoFolderCID());
     }
 
@@ -84,6 +84,10 @@ contract RepositoryFactory is ERC721Enumerable {
     {
         Repository repo = repositories[_tokenId];
         return repo.getCommits();
+    }
+
+    function getBalance(uint256 _tokenId) public view returns(uint256){
+        return repositories[_tokenId].getBalance();
     }
 
     event createdSuccessfully(
