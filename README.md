@@ -20,7 +20,7 @@ BlockHub es un sistema descentralizado para crear, gestionar y colaborar en repo
 - **Sistema de Recompensas**: Otorgar ETH como recompensa por commits aprobados
 - **Control de Acceso**: Solo el owner puede aprobar commits en su repositorio
 
-### Sistema de Badges (Incentivos)
+### Sistema de Badges (alcance previsto)
 | ID | Nombre | Descripción | Requisitos |
 |----|--------|-------------|------------|
 | 0 | **First Commit** | Primer commit aprobado | Aprobar primer commit |
