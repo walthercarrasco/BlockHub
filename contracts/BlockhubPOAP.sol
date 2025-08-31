@@ -23,8 +23,6 @@ contract BlockhubPOAP is ERC1155, Ownable {
 
     mapping(uint256 => BadgeInfo) public badgeInfo;
     mapping(address => mapping(uint256 => bool)) public hasBadge;
-    mapping(address => uint256) public commitCount;
-    mapping(address => uint256) public repoCount;
     mapping(address => uint256) public approvalCount;
     mapping(address => mapping(uint256 => uint256)) public badgeEarnedAt;
 
@@ -102,8 +100,6 @@ contract BlockhubPOAP is ERC1155, Ownable {
         uint256 newRepos,
         uint256 newApprovals
     ) external onlyFactory {
-        commitCount[user] += newCommits;
-        repoCount[user] += newRepos;
         approvalCount[user] += newApprovals;
     }
 
@@ -142,13 +138,9 @@ contract BlockhubPOAP is ERC1155, Ownable {
         return hasBadge[user][badgeId];
     }
     function getUserStats(address user) external view returns (
-        uint256 totalCommits,
-        uint256 totalRepos,
         uint256 totalApprovals,
         uint256 totalBadges
     ) {
-        totalCommits = commitCount[user];
-        totalRepos = repoCount[user];
         totalApprovals = approvalCount[user];
 
         for (uint256 i = 0; i <= ACTIVE_DEVELOPER; i++) {

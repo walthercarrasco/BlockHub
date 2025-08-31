@@ -20,6 +20,8 @@ contract RepositoryFactory is ERC721Enumerable {
     mapping(address => bool) private hasFirstCommit;
     mapping(address => uint256) private userCommitCount;
     mapping(address => uint256) private userApprovalCount;
+    mapping(address => uint256) private userApprovedCommits; 
+    mapping(address => bool) private hasFirstApprovedCommit; 
     
     function setBadgeContract(address _badgeContract) external {
         require(address(badgeContract) == address(0), "Badge contract already set");
@@ -56,14 +58,19 @@ contract RepositoryFactory is ERC721Enumerable {
     }
     
     //Get all repositories of Owner
-    function getAllReposByOwner() external view returns (string[] memory folderCIDs, uint256[] memory tokens) {
+    function getAllReposByOwner() external view returns (
+        string[] memory folderCIDs, 
+        uint256[] memory tokens,
+        string[] memory name) {
         uint256 count = balanceOf(msg.sender); // number of NFTs owned
         folderCIDs = new string[](count);
         tokens = new uint256[](count);
+        name = new string[](count);
         for (uint256 i = 0; i < count; i++) {
             uint256 tokenId = tokenOfOwnerByIndex(msg.sender, i); // ERC721Enumerable
             folderCIDs[i] = repositories[tokenId].getRepoFolderCID();
             tokens[i] = tokenId;
+            name[i] = repositories[tokenId].getRepoName();
         }
     }
 
@@ -75,56 +82,47 @@ contract RepositoryFactory is ERC721Enumerable {
     {
         Repository repo = repositories[_tokenId];
         repo.addPendingCommit(message, payable (msg.sender), commitCID);
-        if (!hasFirstCommit[msg.sender] && address(badgeContract) != address(0)) {
-            hasFirstCommit[msg.sender] = true;
-            badgeContract.mintBadge(
-                msg.sender,
-                0,
-                repo.getRepoName()
-            );
-        }
-
         userCommitCount[msg.sender]++;
-
-        if (userCommitCount[msg.sender] == 5 && address(badgeContract) != address(0)) {
-            badgeContract.mintBadge(
-                msg.sender,
-                2, 
-                "Multiple Repositories"
-            );
-        }
-
-        if (address(badgeContract) != address(0)) {
-            badgeContract.updateUserStats(msg.sender, 1, 0, 0); 
-        }
 
         emit processedCommit(_tokenId, repo.getRepoOwner(), msg.sender, repo.getRepoFolderCID());
     }
     
     //Approve pending commit
     function approveCommit(
-        uint256 _tokenId, 
-        uint256 commitIndex,
-        uint256 reward) public payable
+    uint256 _tokenId, 
+    uint256 commitIndex,
+    uint256 reward) public payable
     {
-        Repository repo = repositories[_tokenId];
-        repo.acceptCommit(commitIndex, reward, msg.sender);
-
-        userApprovalCount[msg.sender]++;
-        
-        if (userApprovalCount[msg.sender] == 10 && address(badgeContract) != address(0)) {
-            badgeContract.mintBadge(
-                msg.sender,
-                3, 
-                "Multiple Repositories"
-            );
+    Repository repo = repositories[_tokenId];
+    
+    (, , address[] memory committers, ) = repo.getCommits();
+    address committer = committers[commitIndex];
+    
+    repo.acceptCommit(commitIndex, reward, msg.sender);
+    
+    if (address(badgeContract) != address(0)) {
+        if (!hasFirstApprovedCommit[committer]) {
+            hasFirstApprovedCommit[committer] = true;
+            badgeContract.mintBadge(committer, 0, repo.getRepoName());
         }
         
-        if (address(badgeContract) != address(0)) {
-            badgeContract.updateUserStats(msg.sender, 0, 0, 1); 
+        userApprovedCommits[committer]++;
+        
+        badgeContract.updateUserStats(committer, 1, 0, 0);
+        
+        if (userApprovedCommits[committer] == 5) {
+            badgeContract.mintBadge(committer, 2, "Multiple Approved Commits");
         }
-        emit approvedCommit(_tokenId, repo.getRepoOwner(), repo.getRepoFolderCID());
     }
+    
+    userApprovalCount[msg.sender]++;
+    if (userApprovalCount[msg.sender] == 10 && address(badgeContract) != address(0)) {
+        badgeContract.mintBadge(msg.sender, 3, "Multiple Repositories");
+        badgeContract.updateUserStats(msg.sender, 0, 0, 1);
+    }
+    
+    emit approvedCommit(_tokenId, repo.getRepoOwner(), repo.getRepoFolderCID());
+}
 
     function getUserBadges(address user) external view returns (
         uint256[] memory,
