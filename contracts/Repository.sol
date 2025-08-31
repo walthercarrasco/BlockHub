@@ -49,13 +49,15 @@ contract Repository is ERC721{
         string[] memory messages, 
         uint256[] memory timestamps, 
         address[] memory committers, 
-        uint256 [] memory status) 
+        uint256 [] memory status,
+        string [] memory commitCID) 
         {
         uint256 count = _commits.length;
         messages = new string[](count);
         timestamps = new uint256[](count);
         committers = new address[](count);
         status = new uint256[](count);
+        commitCID = new string[](count);
 
         for (uint256 i = 0; i < count; i++) {
             Commit storage c = _commits[i];
@@ -63,6 +65,7 @@ contract Repository is ERC721{
             timestamps[i] = c.timestamp;
             committers[i] = c.committer;
             status[i] = c.status;
+            commitCID[i] = c.commitCID;
         }
     } 
 

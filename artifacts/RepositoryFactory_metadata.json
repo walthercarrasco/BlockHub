@@ -1206,7 +1206,7 @@
 		"compilationTarget": {
 			"contracts/RepositoryFactory.sol": "RepositoryFactory"
 		},
-		"evmVersion": "cancun",
+		"evmVersion": "shanghai",
 		"libraries": {},
 		"metadata": {
 			"bytecodeHash": "ipfs"

@@ -97,7 +97,7 @@ contract RepositoryFactory is ERC721Enumerable {
     {
     Repository repo = repositories[_tokenId];
     
-    (, , address[] memory committers, ) = repo.getCommits();
+    (, , address[] memory committers, ,) = repo.getCommits();
     address committer = committers[commitIndex];
     
     repo.acceptCommit(commitIndex, reward, msg.sender);
@@ -150,7 +150,8 @@ contract RepositoryFactory is ERC721Enumerable {
         string[] memory messages, 
         uint256[] memory timestamps, 
         address[] memory committers, 
-        uint256[] memory status)
+        uint256[] memory status,
+        string[] memory commitCID)
     {
         Repository repo = repositories[_tokenId];
         return repo.getCommits();
