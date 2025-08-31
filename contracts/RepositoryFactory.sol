@@ -10,18 +10,19 @@ contract RepositoryFactory is ERC721Enumerable {
     
     constructor() ERC721("RepositoryFactory", "REPO") {}
 
-    mapping (uint256 => Repository) private repositories;
+    mapping (uint256 => Repository) public repositories;
+    uint256 public amount = 0;
 
     //Reference contract ERC-1155
     BlockhubPOAP public badgeContract;
 
     //tracking badges
-    mapping(address => bool) private hasFirstRepo;
-    mapping(address => bool) private hasFirstCommit;
-    mapping(address => uint256) private userCommitCount;
-    mapping(address => uint256) private userApprovalCount;
-    mapping(address => uint256) private userApprovedCommits; 
-    mapping(address => bool) private hasFirstApprovedCommit; 
+    mapping(address => bool) public hasFirstRepo;
+    mapping(address => bool) public hasFirstCommit;
+    mapping(address => uint256) public userCommitCount;
+    mapping(address => uint256) public userApprovalCount;
+    mapping(address => uint256) public userApprovedCommits; 
+    mapping(address => bool) public hasFirstApprovedCommit; 
     
     function setBadgeContract(address _badgeContract) external {
         require(address(badgeContract) == address(0), "Badge contract already set");
@@ -43,6 +44,7 @@ contract RepositoryFactory is ERC721Enumerable {
             );
             badgeContract.updateUserStats(msg.sender, 0, 1, 0);
         }
+        amount++;
         emit createdSuccessfully(tokenId, msg.sender, _repoCID);
     }
 
@@ -156,6 +158,22 @@ contract RepositoryFactory is ERC721Enumerable {
 
     function getBalance(uint256 _tokenId) public view returns(uint256){
         return repositories[_tokenId].getBalance();
+    }
+
+    function getAllRepos() external view returns (string[] memory folderCIDs, uint256[] memory tokens, address[] memory owners, string[] memory names) {
+        uint256 count = totalSupply(); // requires ERC721Enumerable
+        folderCIDs = new string[](count);
+        tokens = new uint256[](count);
+        owners = new address[](count);
+        names = new string[](count);
+
+        for (uint256 i = 0; i < count; i++) {
+            uint256 tokenId = tokenByIndex(i); // from ERC721Enumerable
+            folderCIDs[i] = repositories[tokenId].getRepoFolderCID();
+            tokens[i] = tokenId;
+            owners[i] = ownerOf(tokenId);
+            names[i] = repositories[tokenId].getRepoName();
+        }
     }
 
     event createdSuccessfully(
