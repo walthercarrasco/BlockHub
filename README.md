@@ -88,11 +88,11 @@ Este proyecto está bajo la licencia MIT. Ver `LICENSE` para más detalles.
 
 - **Desarrollador**: BlockHub Team
 - **Equipo**:
-  - **Alex Vila**: [@AlexVila0204](https://github.com/AlexVila0204)
+  - **Alberth Godoy**: [@AlexVila0204](https://github.com/AlexVila0204)
   - **Walther Carrasco**: [@walthercarrasco](https://github.com/walthercarrasco)
   - **Wilmer Zuniga**: [@wilzuniga](https://github.com/wilzuniga)
   - **Kevin Banegas**: [@KevinBanegasUNITEC](https://github.com/KevinBanegasUNITEC)
-  - **Jeiny**: [@Jeiny](https://www.linkedin.com/in/jeiny-caballero?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app)
+  - **Jeiny Caballero**: [@Jeiny](https://www.linkedin.com/in/jeiny-caballero?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app)
 - **Proyecto**: [https://github.com/walthercarrasco/BlockHub]
 
 
